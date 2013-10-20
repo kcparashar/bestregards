@@ -23,7 +23,8 @@
   <link rel="stylesheet" href="css/gumby.css">   <!-- Gumby Framework /-->
   <link rel="stylesheet" href="css/style.css">   <!-- Main stylesheet /-->
   <link rel="stylesheet" href="css/component.css"> <!-- Flexslider - Thumbs Icon /-->
-  
+  <link rel="stylesheet" href="css/jquery.fileupload.css">
+		
   
   <script src="js/modernizr-2.6.2.min.js"></script>  <!-- Modernizr /-->
   
@@ -120,41 +121,36 @@
 <!-- SECTION THUMBS ############################################### -->
 
 
-<section class="cbp-so-section thumbs">
+<section align="center" class="cbp-so-section thumbs"> 
 
 	<div class="row">
 
 		<div class="twelve columns centered">
 		
-			<h3>Order</h3>
-			
-			<p class="lead"> 
-					<br> Upload CSV File of Contacts
-			</p>		
+							 <h3>Order</h3>
+			<p class="lead"><br> Upload CSV File of Contacts</p>		
 
 			<div class="hi-icon-wrap hi-icon-effect-9 hi-icon-effect-9b">
 			
 			<div class="field">
-			 		<input class="input" type="text" placeholder="Full Name" />
-			 		<input class="input" type="text" placeholder="Email" />
+			 		<p><input class="input" type="text" placeholder="Full Name" /></p>
+			 		<p><input class="input" type="text" placeholder="Email" /></p>
 			</div>
 			
 			
 			<p>
 			
 			       
-            <li class="field">
+            <ul class="field">
 	            <div class="picker">
 		            <select>
-			            <option value="#" disabled>Card Layout…</option>
+			            <option value="#" disabled>Confirm Your Card Style</option>
 			            <option>Simple</option>
 			            <option>Classic</option>
 			            <option>Elegant</option>
 			         </select>
-			     </div>
-			 </li>
-			                 
-                </ul>
+			     </div>			                 
+            </ul>
             
   			</div>          
 
@@ -163,17 +159,10 @@
 	</div>
 	
 	
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- Bootstrap styles -->
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-		<!-- Generic page styles -->
-		<link rel="stylesheet" href="css/style.css">
 		<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-		<link rel="stylesheet" href="css/jquery.fileupload.css">
 		
 		<span class="btn btn-success fileinput-button">
 		    <i class="glyphicon glyphicon-plus"></i>
-		    <span>Add files...</span>
 		    <!-- The file input field used as target for the file upload widget -->
 		    <input id="fileupload" type="file" name="files[]" multiple>
 		</span>
@@ -186,8 +175,6 @@
 		<!-- The container for the uploaded files -->
 		<div id="files" class="files"></div>
 		<br>                
-		<li>The maximum file size for uploads in this demo is <strong>5 MB</strong> (default file size is unlimited).</li>
-		<li>You can <strong>drag &amp; drop</strong> files from your desktop on this webpage</li>
 		              </ul>
 		    </div>
 		</div>
@@ -245,7 +232,7 @@
 		    url: url,
 		    dataType: 'json',
 		    autoUpload: false,
-		    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+		    acceptFileTypes: /(\.|\/)(gif|csv|jpe?g|png)$/i,
 		    maxFileSize: 5000000, // 5 MB
 		    // Enable image resizing, except for Android and Opera,
 		    // which actually support image resizing, but fail to
@@ -349,8 +336,6 @@
 		
 				 <ul id="navfirst">
 				 
-					 <li><a href="#">Unsubscribe</a></li>
-					 
 					 <li><a href="#">Privacy</a></li>
 					 
 					 <li><a href="#">Support</a></li>
