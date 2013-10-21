@@ -519,7 +519,8 @@ nav {
 /* Sign up General */
 
 #signup {
-	background: url('../img/debut_dark.png'); 
+	background: url('../img/debut_dark.png');
+	/* background: url('../documentation/assets/images/bg.png'); */
 	padding:50px 0 30px 0; 
 	position: fixed; 
 	bottom:130px; 

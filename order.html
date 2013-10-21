@@ -52,6 +52,74 @@ $(document).ready(function() {
 });
 	
 </script>
+<script>
+
+var lines = []; 
+
+// Thanks to: http://mounirmesselmeni.github.io/2012/11/20/javascript-csv/
+function handleFiles(files) {
+    // Check for the various File API support.
+    if (window.FileReader) {
+        // FileReader are supported.
+        getAsText(files[0]);
+    } else {
+        alert('FileReader are not supported in this browser.');
+    }
+  }
+
+  function getAsText(fileToRead) {
+    var reader = new FileReader();
+    // Read file into memory as UTF-8      
+    reader.readAsText(fileToRead);
+    // Handle errors load
+    reader.onload = loadHandler;
+    reader.onerror = errorHandler;
+  }
+
+  function loadHandler(event) {
+    var csv = event.target.result;
+    processData(csv);
+  }
+
+  function processData(csv) {
+      var allTextLines = csv.split(/[\r\n|\n]/);
+      for (var i=0; i<allTextLines.length; i++) {
+      	if(i == 0) continue; 
+
+          var data = allTextLines[i].split(',');
+              var tarr = [];
+              for (var j=0; j<data.length; j++) {
+                  tarr.push(data[j]);
+              }
+              lines.push(tarr);
+      }
+
+      $.ajax("/PostToMailLift.php", { 
+      	type: "POST", 
+      	data: {
+			SenderName1: 	$("#fname").val() + ' ' + $("#lname").val(),
+			SenderAddress1: $("#addr").val(),
+			SenderAddress2: $("#addr2").val(), 
+			SenderCity: 	$("#city").val(),
+			SenderState: 	$("#state").val(),
+			SenderZip: 		$("#zip").val(), 
+			Recipients: 	lines
+      	}, 
+      	success: function() { 
+      		alert("All done, now get back to honeymooning!"); 
+      	}, 
+      	error: function() { 
+      		alert("There was a problem..."); 
+      	}
+      });
+  }
+
+  function errorHandler(evt) {
+    if(evt.target.error.name == "NotReadableError") {
+        alert("Canno't read file !");
+    }
+  }
+</script>
   
 </head>
 
@@ -147,13 +215,64 @@ $(document).ready(function() {
 
 
 <section align="center" class="cbp-so-section thumbs"> 
+	<div class="row">
+	   <div class="twelve columns centered">
+	      <h3>Estimated Time Savings</h3>
+	      <div class="hi-icon-wrap hi-icon-effect-9 hi-icon-effect-9b">
+	         How many cards do you have to write? <br>
+	         <input type="text" name="cards" id="cards"> cards
+	         <p id="hours"></p>
+	         <br>
+	         <p id="actual">Spend only <b>15 minutes</b> with <b>Best Regards</b>!</p>
+	         <br>
+	         <br>
+	         <p>
+	         <form action="" method="POST"  class="field">
+	            <script>
+	               $(document).ready(function() {
+	               	console.log("Ready for Input!");
+	               	$("#cards").keyup(function(){
+	                  	var cardcount = isPositiveInteger($("#cards").val()*7) ;
+	                  	function isPositiveInteger(input) {
+	                  		if(input) {
+	                       var out = +input;
+	                       if (input < 0) input = Math.abs(input);
+	                       if (input != ~~input) input = parseInt(input, 10);
+	                       if (input >= 60 && input < 4000) {
+	                         min = input % 60;
+	                         hour = Math.floor(input/60);
+	                         $("#hours").empty().append("Thats over ").append(hour).append(" hours ").append(min).append(" minutes").append(" writing cards!");
+	                       }
+	                       if (input > 15 && input/7 <= 25) { 
+	                       var timesaved = (input) - 15;
+	                       var h = Math.floor(timesaved/60);
+	                       var m = timesaved%60;
+	                      	 if (h > 0 ) {
+		                      	 $("#hours").empty().append("You will save ").append(h).append(" hours ").append(m).append(" minutes using <b>Best Regards</b>")};
+		                     if (h <= 0){ $("#hours").empty().append("You will save ").append(m).append(" minutes").append(" using <b>Best Regards</b>");}
+	                       }
+	                       if (input <= 15 ||(input > 25 && input < 60)) { $("#hours").empty().append("You will spend ").append(input).append(" minutes").append(" writing cards."); }
+	                       if (input >= 4000) {
+	                         $("#hours").empty().append("To write ").append(input/7).append(" cards ").append(" please email us").append("<a href=\"mailto:me@krishna.im?Subject=We%20need%20a%20bunch%20of%20cards%20\"> here!</a>")};
+
+	                     }
+	                     else { $("#hours").empty().append("You see that field above? If you put a number (i.e., \"40\") I can tell you how much time you save with <b>Best Regards</b>"); }
+	                  	}
+	                 });
+	                   $("#cards").keydown(function(){ $("#hours").empty() });
+	               });
+	            </script>
+	         </form>
+	         </p>
+	      </div>
+	   </div>
+	</div>
 
 	<div class="row">
 
 		<div class="twelve columns centered">
 		
 							 <h3>Order</h3>
-			<p class="lead"><br> Upload CSV File of Contacts</p>		
 
 			<div class="hi-icon-wrap hi-icon-effect-9 hi-icon-effect-9b">
 			
@@ -168,6 +287,7 @@ $(document).ready(function() {
 			         </select>
 			     </div>			                 
             </ul>
+            	<form action="" method="POST"  class="field">
 			 		<p><input class="input" type="text" name="fname" id="fname" placeholder="First Name" /></p>
 			 		<p><input class="input" type="text" name="lname" id="lname" placeholder="Last Name" /></p>
 			 		<p><input class="input" type="text" name="email" id="email" placeholder="Email" /></p>
@@ -180,21 +300,19 @@ $(document).ready(function() {
 			 		<button type="button" id="next">Save</button>
 			 		<p id="confirm"></p>
 			 		
-			 		<br>
-			 	<p><form action="" method="POST"  class="field">
-				  <script
-				    src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
-				    data-key="pk_test_5AryWoQVyeu32dmGgV0CW9qd"
-				    data-amount="10000"
-				    data-name="Best Regards"
-				    data-description=Cards ($100.00)"
-				    data-image="/128x128.png">
-				  </script>
-				</form></p>
-				</div>
-			</div>
+			 	<p>
 
-			       
+				</p>
+				</div>
+			
+					<p class="lead"> 
+					<br> Download the CSV <a href="https://www.dropbox.com/s/b7rxekciik4txmb/CSV_Template.xlsx"><u><FONT COLOR = "#C0C0C0">Template</u></FONT></a>
+					<br> Complete with Contacts
+					<br> Save File as .csv 
+					<br> Upload File
+					</p>			
+
+			       </div>
             
             
   			</div>          
@@ -209,8 +327,20 @@ $(document).ready(function() {
 		<span class="btn btn-success fileinput-button">
 		    <i class="glyphicon glyphicon-plus"></i>
 		    <!-- The file input field used as target for the file upload widget -->
-		    <input id="fileupload" type="file" name="files[]" multiple>
+		    <input id="fileupload" type="file" name="files[]" onchange="handleFiles(this.files)" />
 		</span>
+
+
+		  <script
+		    src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+		    data-key="pk_test_5AryWoQVyeu32dmGgV0CW9qd"
+		    data-amount="10000"
+		    data-name="Best Regards"
+		    data-description="Cards ($100.00)"
+		    data-image="/128x128.png">
+		  </script>
+
+	</form>
 		<br>
 		<br>
 		<!-- The global progress bar -->
